@@ -14,4 +14,7 @@
 /* Function forward references */
 
 //server.c
-void serveOneClient(int clientFd);
+void serveOneClient(int clientFd, char *buffer);
+
+//client.c
+void doClientRequest(int clientFd, char *buffer);
