@@ -30,9 +30,18 @@ void acceptConnect(int serverSok, int *clientSok)
     printf("...connected\n");
 }
 
-void connectClient()
+void connectClient(int *serverSok)
 {
+    struct sockaddr_in serverAddress;
+    int addressLen = sizeof(serverAddress);
 
+    errorCheck(*serverSok = socket(AF_INET, SOCK_STREAM, 0), "Unable to create socket");
+
+    memset((char *)&serverAddress, 0, addressLen);
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_port = htons(PORT);
+
+    errorCheck(connect(*serverSok, (struct sockaddr*)&serverAddress, addressLen), "Unable to connect to server");
 }
 
 //Thanks Jacob Sorber

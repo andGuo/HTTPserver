@@ -23,3 +23,4 @@ void doClientRequest(int serverFd);
 int errorCheck(int rtnVal, const char *message);
 void connectServer(int *serverSok);
 void acceptConnect(int serverSok, int *clientSok);
+void connectClient(int *serverSok);
