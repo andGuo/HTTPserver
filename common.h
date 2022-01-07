@@ -9,3 +9,4 @@
 
 #define PORT 8080
 #define MAX_BACKLOG 5
+#define MAX_BUFFER_SIZE 2048
