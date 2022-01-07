@@ -7,4 +7,5 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORT 80
+#define PORT 8080
+#define MAX_BACKLOG 5
