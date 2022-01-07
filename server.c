@@ -53,9 +53,10 @@ int main(int argc, char *argv[])
 void serveOneClient(int clientFd, char *buffer)
 {
     long valread;
+    char *hello = "HTTP/1.0 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 
     valread = read(clientFd, buffer, MAX_BUFFER_SIZE);
-    printf("%s\n", buffer);
+    printf("%s", buffer);
     printf("Sending reply...\n");
-    write(clientFd, "Thanks for the message\n", strlen("Thanks for the message\n"));
+    write(clientFd, hello, strlen(hello));
 }
