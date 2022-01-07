@@ -18,3 +18,8 @@ void serveOneClient(int clientFd);
 
 //client.c
 void doClientRequest(int serverFd);
+
+//connect.c
+int errorCheck(int rtnVal, const char *message);
+void connectServer(int *serverSok);
+void acceptConnect(int serverSok, int *clientSok);
