@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
     {
         acceptConnect(serverFd, &clientFd);
         serveOneClient(clientFd);
-        close(clientFd);
     }
 
     close(serverFd);
