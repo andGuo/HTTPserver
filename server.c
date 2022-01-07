@@ -40,8 +40,6 @@ int main(int argc, char *argv[])
         printf("...connected\n");
 
         serveOneClient(clientFd);
-        
-        close(clientFd);
     }
 
     close(serverFd);
@@ -59,4 +57,6 @@ void serveOneClient(int clientFd)
     printf("%s", buffer);
     printf("Sending reply...\n");
     write(clientFd, hello, strlen(hello));
+
+    close(clientFd);
 }

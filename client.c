@@ -24,7 +24,6 @@ int main(int argc, char const *argv[])
 
     doClientRequest(clientFd);
 
-    close(clientFd);
     return 0;
 }
 
@@ -37,4 +36,6 @@ void doClientRequest(int clientFd)
     valread = read(clientFd, buffer, MAX_BUFFER_SIZE);
 
     printf("%s\n", buffer);
+    
+    close(clientFd);
 }
