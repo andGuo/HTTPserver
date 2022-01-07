@@ -41,8 +41,10 @@ int main(int argc, char *argv[])
 
         serveOneClient(clientFd);
         
-        close(serverFd);
+        close(clientFd);
     }
+
+    close(serverFd);
 
     return 0;
 }
