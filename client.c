@@ -5,7 +5,6 @@ int main(int argc, char const *argv[])
     int clientFd;
     struct sockaddr_in serverAddress;
     int addressLen = sizeof(serverAddress);
-    char buffer[MAX_BUFFER_SIZE] = {0};
 
     if ((clientFd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
@@ -23,15 +22,16 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    doClientRequest(clientFd, buffer);
+    doClientRequest(clientFd);
 
     close(clientFd);
     return 0;
 }
 
-void doClientRequest(int clientFd, char *buffer)
+void doClientRequest(int clientFd)
 {
     long valread;
+    char buffer[MAX_BUFFER_SIZE] = {0};
 
     send(clientFd, "Here's your message\n", strlen("Here's your message\n"), 0);
     valread = read(clientFd, buffer, MAX_BUFFER_SIZE);

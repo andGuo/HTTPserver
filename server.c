@@ -5,7 +5,6 @@ int main(int argc, char *argv[])
     int serverFd, clientFd;
     struct sockaddr_in address;
     int addressLen = sizeof(address);
-    char buffer[MAX_BUFFER_SIZE] = {0};
 
     if ((serverFd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
@@ -40,7 +39,7 @@ int main(int argc, char *argv[])
         }
         printf("...connected\n");
 
-        serveOneClient(clientFd, buffer);
+        serveOneClient(clientFd);
         
         close(clientFd);
     }
@@ -50,8 +49,9 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void serveOneClient(int clientFd, char *buffer)
+void serveOneClient(int clientFd)
 {
+    char buffer[MAX_BUFFER_SIZE] = {0};
     long valread;
     char *hello = "HTTP/1.0 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
 
