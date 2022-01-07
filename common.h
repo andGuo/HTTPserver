@@ -17,4 +17,4 @@
 void serveOneClient(int clientFd);
 
 //client.c
-void doClientRequest(int clientFd);
+void doClientRequest(int serverFd);
