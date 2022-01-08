@@ -2,17 +2,27 @@
 
 void connectServer(int *serverSok)
 {
-    struct sockaddr_in address;
-    int addressLen = sizeof(address);
+    struct addrinfo serverInfo, *res;
+    int yes = 1;
 
-    errorCheck(*serverSok = socket(PF_INET, SOCK_STREAM, 0), "Unable to create socket");
+    memset(&serverInfo, 0, sizeof(serverInfo));
+    serverInfo.ai_family = AF_UNSPEC;
+    serverInfo.ai_socktype = SOCK_STREAM;
+    serverInfo.ai_flags = AI_PASSIVE;
 
-    memset((char *)&address, 0, addressLen);
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = htonl(INADDR_ANY);
-    address.sin_port = htons(PORT);
+    getaddrinfo(NULL, "8080", &serverInfo, &res);
 
-    errorCheck(bind(*serverSok, (struct sockaddr *)&address, addressLen), "Unable to bind socket");
+    errorCheck(*serverSok = socket(res->ai_family, res->ai_socktype, res->ai_protocol), "Unable to create socket");
+
+    //errorCheck(setsockopt(*serverSok, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes), "setsockopt");
+    //Reuse open port
+
+    if (bind(*serverSok, res->ai_addr, res->ai_addrlen) < 0)
+    {
+        close(*serverSok);
+        perror("Unable to bind socket");
+        exit(EXIT_FAILURE);
+    }
 
     errorCheck(listen(*serverSok, MAX_BACKLOG), "Unable to listen on socket");
 }
