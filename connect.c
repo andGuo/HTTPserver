@@ -10,7 +10,8 @@ void connectServer(int *serverSok)
     serverInfo.ai_socktype = SOCK_STREAM;
     serverInfo.ai_flags = AI_PASSIVE;
 
-    errorCheck(getaddrinfo(NULL, STR_PORT, &serverInfo, &res), "Unable to getaddrinfo");
+    int rv = getaddrinfo(NULL, STR_PORT, &serverInfo, &res);
+    errorCheck(rv, gai_strerror(rv));
 
     errorCheck(*serverSok = socket(res->ai_family, res->ai_socktype, res->ai_protocol), "Unable to create socket");
 
@@ -23,6 +24,8 @@ void connectServer(int *serverSok)
         perror("Unable to bind socket");
         exit(EXIT_FAILURE);
     }
+
+    freeaddrinfo(res);
 
     errorCheck(listen(*serverSok, MAX_BACKLOG), "Unable to listen on socket");
     printf("Waiting for connection...\n");
