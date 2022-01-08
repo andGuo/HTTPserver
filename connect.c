@@ -5,7 +5,7 @@ void connectServer(int *serverSok)
     struct sockaddr_in address;
     int addressLen = sizeof(address);
 
-    errorCheck(*serverSok = socket(AF_INET, SOCK_STREAM, 0), "Unable to create socket");
+    errorCheck(*serverSok = socket(PF_INET, SOCK_STREAM, 0), "Unable to create socket");
 
     memset((char *)&address, 0, addressLen);
     address.sin_family = AF_INET;
@@ -50,7 +50,7 @@ int errorCheck(int rtnVal, const char *message)
     if (rtnVal < 0)
     {
         perror(message);
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
     return rtnVal;
 }
