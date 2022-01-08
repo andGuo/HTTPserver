@@ -10,7 +10,7 @@ void connectServer(int *serverSok)
     serverInfo.ai_socktype = SOCK_STREAM;
     serverInfo.ai_flags = AI_PASSIVE;
 
-    getaddrinfo(NULL, "8080", &serverInfo, &res);
+    errorCheck(getaddrinfo(NULL, STR_PORT, &serverInfo, &res), "Unable to getaddrinfo");
 
     errorCheck(*serverSok = socket(res->ai_family, res->ai_socktype, res->ai_protocol), "Unable to create socket");
 
@@ -25,14 +25,13 @@ void connectServer(int *serverSok)
     }
 
     errorCheck(listen(*serverSok, MAX_BACKLOG), "Unable to listen on socket");
+    printf("Waiting for connection...\n");
 }
 
 void acceptConnect(int serverSok, int *clientSok)
 {
-    struct sockaddr_in address;
+    struct sockaddr_storage address;
     socklen_t addressLen = sizeof(address);
-
-    printf("Waiting for connection...\n");
 
     errorCheck(*clientSok = accept(serverSok, (struct sockaddr *)&address, &addressLen), 
     "Unable to accept connection");
