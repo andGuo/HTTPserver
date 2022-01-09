@@ -16,7 +16,7 @@ void connectServer(int *serverSok)
     errorCheck(*serverSok = socket(res->ai_family, res->ai_socktype, res->ai_protocol), "Unable to create socket");
 
     //Reuse if port is still open in kernel
-    errorCheck(setsockopt(*serverSok, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes), "setsockopt");
+    errorCheck(setsockopt(*serverSok, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes), "setsockopt error");
 
     if (bind(*serverSok, res->ai_addr, res->ai_addrlen) < 0)
     {
