@@ -33,3 +33,7 @@ void *getInAddr(struct sockaddr *sa);
 void sendSimpleRequest(const char* document, int serverFd);
 void sendFullRequest();
 void handleResponse(int serverFd);
+
+//serverHttp.c
+int handleRequest();
+void sendResponse();
