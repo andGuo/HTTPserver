@@ -25,6 +25,7 @@ void serveOneClient(int clientFd)
 
     errorCheck(recv(clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
     printf("%s", buffer);
+    handleRequest(buffer);
     printf("Sending reply...\n");
     write(clientFd, hello, strlen(hello));
 

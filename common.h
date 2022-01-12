@@ -13,6 +13,7 @@
 #define STR_PORT "8080"
 #define MAX_BACKLOG 5
 #define MAX_BUFFER_SIZE 2048
+#define MAX_STRING 256
 
 /* Function forward references */
 
