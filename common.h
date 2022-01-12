@@ -27,6 +27,7 @@ int errorCheck(int rtnVal, const char *message);
 void setUpServer(int *serverSok);
 void acceptConnect(int serverSok, int *clientSok);
 void connectClient(int *serverSok);
+void *getInAddr(struct sockaddr *sa);
 
 //clientHttp.c
 void sendSimpleRequest(const char* document, int serverFd);

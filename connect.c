@@ -35,11 +35,13 @@ void acceptConnect(int serverSok, int *clientSok)
 {
     struct sockaddr_storage address;
     socklen_t addressLen = sizeof(address);
+    char strIp[INET6_ADDRSTRLEN];
 
     errorCheck(*clientSok = accept(serverSok, (struct sockaddr *)&address, &addressLen), 
     "Unable to accept connection");
 
-    printf("...connected\n");
+    inet_ntop(address.ss_family, getInAddr((struct sockaddr*)&address), strIp, INET6_ADDRSTRLEN);
+    printf("...connected from %s\n", strIp);
 }
 
 void connectClient(int *serverSok)
@@ -65,4 +67,15 @@ int errorCheck(int rtnVal, const char *message)
         exit(EXIT_FAILURE);
     }
     return rtnVal;
+}
+
+//Thanks Beej
+void *getInAddr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET)
+    {
+        return &(((struct sockaddr_in*)sa)->sin_addr);
+    }
+    //else must be AF_INET6
+    return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }

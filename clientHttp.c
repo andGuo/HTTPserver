@@ -9,12 +9,12 @@ void sendSimpleRequest(const char* document, int serverFd)
     errorCheck(send(serverFd, request, sizeof(request), 0), "Unable to send data"); 
 }
 
-/*
+
 void sendFullRequest()
 {
 
 }
-*/
+
 
 void handleResponse(int serverFd)
 {
