@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <regex.h>
 
 #define PORT 8080
 #define STR_PORT "8080"
@@ -23,6 +24,11 @@ void doClientRequest(int serverFd);
 
 //connect.c
 int errorCheck(int rtnVal, const char *message);
-void connectServer(int *serverSok);
+void setUpServer(int *serverSok);
 void acceptConnect(int serverSok, int *clientSok);
 void connectClient(int *serverSok);
+
+//clientHttp.c
+void sendSimpleRequest(const char* document, int serverFd);
+void sendFullRequest();
+void handleResponse(int serverFd);

@@ -4,10 +4,11 @@ int main(int argc, char *argv[])
 {
     int serverFd, clientFd;
     
-    connectServer(&serverFd);
+    setUpServer(&serverFd);
 
     while (1)
     {
+        printf("Waiting for connection...\n");
         acceptConnect(serverFd, &clientFd);
         serveOneClient(clientFd);
     }
@@ -28,4 +29,5 @@ void serveOneClient(int clientFd)
     write(clientFd, hello, strlen(hello));
 
     close(clientFd);
+    printf("Connection closed...\n");
 }

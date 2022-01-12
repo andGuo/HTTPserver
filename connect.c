@@ -1,6 +1,6 @@
 #include "common.h"
 
-void connectServer(int *serverSok)
+void setUpServer(int *serverSok)
 {
     struct addrinfo serverInfo, *res;
     int yes = 1;
@@ -28,7 +28,6 @@ void connectServer(int *serverSok)
     freeaddrinfo(res);
 
     errorCheck(listen(*serverSok, MAX_BACKLOG), "Unable to listen on socket");
-    printf("Waiting for connection...\n");
 }
 
 void acceptConnect(int serverSok, int *clientSok)
