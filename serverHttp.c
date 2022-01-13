@@ -12,7 +12,7 @@ int handleRequest(char *clientReqBuf, int clientFd)
     regex_t regex;
     size_t nmatch = 5;
     regmatch_t pmatch[5];
-    char *pattern = "([A-Za-z]+)[[:blank:]]+(http?://.*|/[[:graph:]]*)[[:blank:]]*(HTTP/[0-9][.][0-9])?";
+    char *pattern = "([A-Za-z]+)[[:blank:]]+(http?://[[:graph:]]*|/[[:graph:]]*)[[:blank:]]*(HTTP/[0-9][.][0-9])?.*\r?\n";
     char errBuffer[MAX_STRING];
     int rt;
     
@@ -62,7 +62,7 @@ void sendResponse(requestType *request)
     }
     else
     {
-        //sendError
+        //sendError (check if 0.9 or 1.0)
     }
 }
 
