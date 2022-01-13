@@ -16,13 +16,14 @@
 #define MAX_STRING 256
 #define MAX_REQUEST 16
 
-typedef enum {get, head, post} REQUEST_ENUM;
+typedef enum {get, head, post} RequestEnum;
 static const char *REQUEST[] = {"GET", "HEAD", "POST"};
 
 typedef struct {
     char method[MAX_REQUEST];
     char uri[MAX_BUFFER_SIZE];
     char httpVer[MAX_REQUEST];
+    int socket;
 } requestType;
 
 /* Function forward references */
@@ -46,5 +47,5 @@ void sendFullRequest();
 void handleResponse(int serverFd);
 
 //serverHttp.c
-int handleRequest();
+int handleRequest(char *buffer, int clientFd);
 void sendResponse();
