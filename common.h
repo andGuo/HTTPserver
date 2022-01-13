@@ -19,6 +19,12 @@
 typedef enum {get, head, post} REQUEST_ENUM;
 static const char *REQUEST[] = {"GET", "HEAD", "POST"};
 
+typedef struct {
+    char method[MAX_REQUEST];
+    char uri[MAX_BUFFER_SIZE];
+    char httpVer[MAX_REQUEST];
+} requestType;
+
 /* Function forward references */
 
 //server.c
