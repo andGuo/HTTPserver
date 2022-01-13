@@ -14,6 +14,10 @@
 #define MAX_BACKLOG 5
 #define MAX_BUFFER_SIZE 2048
 #define MAX_STRING 256
+#define MAX_REQUEST 16
+
+typedef enum {get, head, post} REQUEST_ENUM;
+static const char *REQUEST[] = {"GET", "HEAD", "POST"};
 
 /* Function forward references */
 
