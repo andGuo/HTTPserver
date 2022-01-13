@@ -4,7 +4,7 @@ int handleRequest(char *buffer)
 {
     regex_t regex;
     
-    char *pattern = "^((GET[[:blank:]]+)|(HEAD[[:blank:]]+)|(POST[[:blank:]]+))";
+    char *pattern = "^((GET)|(HEAD)|(POST))";
     size_t nmatch = 5;
     regmatch_t pmatch[5];
     char errBuffer[MAX_STRING];
@@ -23,8 +23,8 @@ int handleRequest(char *buffer)
         return 0;
     }
 
-    printf("%s", &buffer[pmatch[3].rm_eo - pmatch[3].rm_so]);
-    memcpy(method, &buffer[pmatch[1].rm_so], pmatch[1].rm_eo - pmatch[1].rm_so - 1);
+    printf("%s", &buffer[pmatch[1].rm_eo - pmatch[1].rm_so]);
+    memcpy(method, &buffer[pmatch[1].rm_so], pmatch[1].rm_eo - pmatch[1].rm_so);
     printf("%d, %d\n", pmatch[1].rm_eo, pmatch[1].rm_so);
     printf("%s", method);
     
