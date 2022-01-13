@@ -48,9 +48,9 @@ void handleResponse(int serverFd);
 
 //serverHttp.c
 int handleRequest(char *buffer, int clientFd);
-void respond(requestType *r);
+void reply(requestType *r);
 void createHeader(RequestEnum rType, requestType *r, char *buffer);
 void sendSimpleResponse(requestType *r);
 void sendFullResponse(requestType *r);
-void sendSimpleError(requestType *r, int code, const char *message);
-void sendFullError(requestType *r, int code, const char *message);
+void sendSimpleError(requestType *r, int statusCode, const char *message);
+void sendFullError(requestType *r, int statusCode, const char *message);

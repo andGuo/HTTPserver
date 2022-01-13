@@ -12,7 +12,7 @@ int handleRequest(char *clientReqBuf, int clientFd)
     regex_t regex;
     size_t nmatch = 5;
     regmatch_t pmatch[5];
-    char *pattern = "([A-Za-z]+)[[:blank:]]+(http?://[[:graph:]]*|/[[:graph:]]*)[[:blank:]]*(HTTP/[0-9][.][0-9])?.*\r?\n";
+    char *pattern = "^([A-Z]+)[[:blank:]]+(http?://[[:graph:]]*|/[[:graph:]]*)[[:blank:]]*(HTTP/[0-9][.][0-9])?.*\r?\n";
     char errBuffer[MAX_STRING];
     int rt;
     
@@ -22,7 +22,7 @@ int handleRequest(char *clientReqBuf, int clientFd)
     {
         regerror(rt, &regex, errBuffer, MAX_STRING);
         printf("%s\n", errBuffer);
-        //sendSimpleError
+        sendSimpleError(&req, 400, "Bad Request");
         return EXIT_FAILURE;
     }
 
@@ -33,20 +33,20 @@ int handleRequest(char *clientReqBuf, int clientFd)
     memcpy(req.httpVer, &clientReqBuf[pmatch[3].rm_so], pmatch[3].rm_eo - pmatch[3].rm_so);
 
     printf("%s,%s,%s\n", req.method, req.uri, req.httpVer);
-    respond(&req);
+    reply(&req);
 
     return 0;
 }
 
-void respond(requestType *r)
+void reply(requestType *r)
 {
     if (r->httpVer[0] == '\0') //NULL character indicates regex pattern did not find version number
     {
-        sendSimpleResponse(r);
+        sendSimpleResponse(r); //send a http 0.9 response
     }
     else //should be an http 1.0 or http 1.1 request.
     {
-        sendFullResponse(r);
+        sendFullResponse(r); //send a http 1.0 response
     }
 }
 
@@ -54,7 +54,7 @@ void sendSimpleResponse(requestType *r)
 {
     if (strcmp(r->method, REQUEST[get]) != 0) //Simple responses can only be GET methods
     {
-        //sendSimpleError
+        sendSimpleError(r, 501, "Not Implemented");
         return;
     }
 
@@ -81,7 +81,7 @@ void sendFullResponse(requestType *r)
     }
     else
     {
-        //sendFullError
+        sendFullError(r, 501, "Not Implemented");
     }
 }
 
@@ -90,12 +90,20 @@ void createHeader(RequestEnum rType, requestType *r, char *buffer)
     
 }
 
-void sendSimpleError(requestType *r, int code, const char *message)
+void sendSimpleError(requestType *r, int statusCode, const char *message)
 {
+    char response[MAX_BUFFER_SIZE];
 
+    snprintf(response, sizeof(response), "%d %s\r\n", statusCode, message);
+
+    errorCheck(send(r->socket, response, sizeof(response), 0), "Unable to send simple error"); 
 }
 
-void sendFullError(requestType *r, int code, const char *message)
+void sendFullError(requestType *r, int statusCode, const char *message)
 {
+    char response[MAX_BUFFER_SIZE];
 
+    snprintf(response, sizeof(response), "%s %d %s\r\n", r->httpVer, statusCode, message);
+
+    errorCheck(send(r->socket, response, sizeof(response), 0), "Unable to send simple error"); 
 }
