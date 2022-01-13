@@ -22,7 +22,7 @@ int handleRequest(char *clientReqBuf, int clientFd)
     {
         regerror(rt, &regex, errBuffer, MAX_STRING);
         printf("%s\n", errBuffer);
-        //senderror
+        //sendSimpleError
         return EXIT_FAILURE;
     }
 
@@ -33,50 +33,69 @@ int handleRequest(char *clientReqBuf, int clientFd)
     memcpy(req.httpVer, &clientReqBuf[pmatch[3].rm_so], pmatch[3].rm_eo - pmatch[3].rm_so);
 
     printf("%s,%s,%s\n", req.method, req.uri, req.httpVer);
-    sendResponse(&req);
+    respond(&req);
 
     return 0;
 }
 
-void sendResponse(requestType *request)
+void respond(requestType *r)
+{
+    if (r->httpVer[0] == '\0') //NULL character indicates regex pattern did not find version number
+    {
+        sendSimpleResponse(r);
+    }
+    else //should be an http 1.0 or http 1.1 request.
+    {
+        sendFullResponse(r);
+    }
+}
+
+void sendSimpleResponse(requestType *r)
+{
+    if (strcmp(r->method, REQUEST[get]) != 0) //Simple responses can only be GET methods
+    {
+        //sendSimpleError
+        return;
+    }
+
+    char buffer[MAX_BUFFER_SIZE] = {0};
+    //Pretend I look up an HTML file here
+    snprintf(buffer, sizeof(buffer), "%s\r\n", "<html>\r\n<body>\r\n\r\n<h1>My First Heading</h1>\r\n\r\n<p>My first paragraph.</p>\r\n\r\n</body>\r\n</html>\r\n");
+    send(r->socket, buffer, strlen(buffer), 0);
+}
+
+void sendFullResponse(requestType *r)
 {
     char buffer[MAX_BUFFER_SIZE] = {0};
-
-    if (strcmp(request->method, REQUEST[get]) == 0)
+    if (strcmp(r->method, REQUEST[get]) == 0)
     {
-        if (request->httpVer[0] == '\0') //Must be an http 0.9 request (or gave a bunch of trash after the URI)
-        {
-            //Pretend I look up an HTML file here
-            snprintf(buffer, sizeof(buffer), "%s\r\n", "<html>\r\n<body>\r\n\r\n<h1>My First Heading</h1>\r\n\r\n<p>My first paragraph.</p>\r\n\r\n</body>\r\n</html>\r\n");
-            send(request->socket, buffer, strlen(buffer), 0);
-            return;
-        }
+        
     }
-    else if (strcmp(request->method, REQUEST[head]) == 0)
+    else if (strcmp(r->method, REQUEST[head]) == 0)
     {
 
     }
-    else if (strcmp(request->method, REQUEST[post]) == 0)
+    else if (strcmp(r->method, REQUEST[post]) == 0)
     {
 
     }
     else
     {
-        //sendError (check if 0.9 or 1.0)
+        //sendFullError
     }
 }
 
-void createHeader(RequestEnum rType, requestType *request)
+void createHeader(RequestEnum rType, requestType *r, char *buffer)
 {
-    switch(rType)
-    {
-        case get:
-            break;
-        case head:
-            break;
-        case post:
-            break;
-        default:
-            break;
-    }
+    
+}
+
+void sendSimpleError(requestType *r, int code, const char *message)
+{
+
+}
+
+void sendFullError(requestType *r, int code, const char *message)
+{
+
 }
