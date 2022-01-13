@@ -44,7 +44,13 @@ void sendResponse(requestType *request)
 
     if (strcmp(request->method, REQUEST[get]) == 0)
     {
-
+        if (request->httpVer[0] == '\0') //Must be an http 0.9 request (or gave a bunch of trash after the URI)
+        {
+            //Pretend I look up an HTML file here
+            snprintf(buffer, sizeof(buffer), "%s\r\n", "<html>\r\n<body>\r\n\r\n<h1>My First Heading</h1>\r\n\r\n<p>My first paragraph.</p>\r\n\r\n</body>\r\n</html>\r\n");
+            send(request->socket, buffer, strlen(buffer), 0);
+            return;
+        }
     }
     else if (strcmp(request->method, REQUEST[head]) == 0)
     {
@@ -62,5 +68,15 @@ void sendResponse(requestType *request)
 
 void createHeader(RequestEnum rType, requestType *request)
 {
-
+    switch(rType)
+    {
+        case get:
+            break;
+        case head:
+            break;
+        case post:
+            break;
+        default:
+            break;
+    }
 }
