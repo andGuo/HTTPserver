@@ -1,12 +1,12 @@
 #include "common.h"
 
-int handleRequest(char *clientReqBuf, int clientFd)
+int handleRequest(char *clientReqBuf, int *clientFd)
 {
     requestType req = {
         .method = {0},
         .uri = {0},
         .httpVer = {0},
-        .socket = clientFd};
+        .socket = *clientFd};
 
     regex_t regex;
     size_t nmatch = 5;

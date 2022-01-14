@@ -1,4 +1,4 @@
-#include <common.h>
+#include "common.h"
 
 void initQueue(queueType *q)
 {
@@ -17,7 +17,7 @@ void enqueueTask(queueType *q, int *clientSocket)
   newNode->next = NULL;
   newNode->clientFd = clientSocket;
 
-  if (isEmpty(q) == NULL)
+  if (q->head == NULL && q->tail == NULL)
   {
     q->head = newNode;
     q->tail = newNode;
@@ -34,9 +34,9 @@ int dequeueTask(queueType *q, int **clientSocket)
   nodeType *currentNode;
   nodeType *nextNode;
 
-  if (isEmpty(q) == NULL)
+  if (q->head == NULL && q->tail == NULL)
   {
-    return NULL;
+    return -1;
   }
 
   currentNode = q->head;
@@ -56,19 +56,7 @@ int dequeueTask(queueType *q, int **clientSocket)
     q->head = nextNode;
   }
 
-  return 1;
-}
-
-int isEmpty(queueType *q)
-{
-  if (q->head == NULL && q->tail == NULL)
-  {
-    return NULL;
-  }
-  else
-  {
-    return 1;
-  }
+  return 0;
 }
 
 void cleanQueue(queueType *q)
@@ -81,7 +69,7 @@ void cleanQueue(queueType *q)
   while (currentNode != NULL)
   {
     nextNode = currentNode->next;
-    cleanupSocket(currentNode->clientFd);
+    free(currentNode->clientFd);
     free(currentNode);
     currentNode = nextNode;
   }

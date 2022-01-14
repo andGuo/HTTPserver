@@ -31,13 +31,15 @@ void setUpServer(int *serverSok)
     printf("Done server setup\n");
 }
 
-void acceptConnect(int serverSok, int *clientSok)
+void acceptConnect(int serverSok, int **clientSok)
 {
     struct sockaddr_storage address;
     socklen_t addressLen = sizeof(address);
     char strIp[INET6_ADDRSTRLEN];
 
-    errorCheck(*clientSok = accept(serverSok, (struct sockaddr *)&address, &addressLen),
+    *clientSok = malloc(sizeof(int));
+
+    errorCheck(**clientSok = accept(serverSok, (struct sockaddr *)&address, &addressLen),
                "Unable to accept connection");
 
     inet_ntop(address.ss_family, getInAddr((struct sockaddr *)&address), strIp, INET6_ADDRSTRLEN);

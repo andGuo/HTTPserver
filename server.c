@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-    int serverFd, clientFd;
+    int serverFd, *clientFd;
 
     pthread_t threadPool[POOL_NUM_THREADS];
 
@@ -20,16 +20,18 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void serveOneClient(int clientFd)
+void serveOneClient(int *clientFd)
 {
     //sleep(5);
     char buffer[MAX_BUFFER_SIZE] = {0};
 
-    errorCheck(recv(clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
+    errorCheck(recv(*clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
     printf("%s", buffer);
     handleRequest(buffer, clientFd);
 
-    close(clientFd);
+    close(*clientFd);
+    free(clientFd);
+    
     printf("Connection closed...\n");
 }
 

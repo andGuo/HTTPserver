@@ -26,7 +26,7 @@ typedef struct {
     char method[MAX_REQUEST];
     char uri[MAX_BUFFER_SIZE];
     char httpVer[MAX_REQUEST];
-    int socket;
+    int  socket;
 } requestType;
 
 typedef struct {
@@ -39,20 +39,20 @@ typedef struct {
     char *outBuffer;
 } headerType;
 
-typedef struct {
-  nodeType *head;
-  nodeType *tail;
-} queueType;
-
 typedef struct node{
     struct node *next;
     int *clientFd;
 } nodeType;
 
+typedef struct {
+  nodeType *head;
+  nodeType *tail;
+} queueType;
+
 /* Function forward references */
 
 //server.c
-void serveOneClient(int clientFd);
+void serveOneClient(int *clientFd);
 
 //client.c
 void doClientRequest(int serverFd);
@@ -64,7 +64,7 @@ int genTime(char *dateStr);
 
 //connect.c
 void setUpServer(int *serverSok);
-void acceptConnect(int serverSok, int *clientSok);
+void acceptConnect(int serverSok, int **clientSok);
 void connectClient(int *serverSok);
 
 //clientHttp.c
@@ -73,7 +73,7 @@ void sendFullRequest(char *uri, int serverFd, const char *requestStr);
 void handleResponse(int serverFd);
 
 //serverHttp.c
-int handleRequest(char *buffer, int clientFd);
+int handleRequest(char *buffer, int *clientFd);
 void reply(requestType *r);
 void createHeader(headerType *h);
 void sendSimpleResponse(requestType *r);
@@ -85,5 +85,4 @@ void sendFullError(headerType *r, int statusCode, char *reason);
 void initQueue(queueType *q);
 void enqueueTask(queueType *q, int *clientSocket);
 int dequeueTask(queueType *q, int **clientSocket);
-int isEmpty(queueType *q);
 void cleanQueue(queueType *q);
