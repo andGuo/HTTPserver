@@ -4,6 +4,8 @@ int main(int argc, char *argv[])
 {
     int serverFd, clientFd;
 
+    pthread_t threadPool[POOL_NUM_THREADS];
+
     setUpServer(&serverFd);
 
     while (1)
@@ -20,6 +22,7 @@ int main(int argc, char *argv[])
 
 void serveOneClient(int clientFd)
 {
+    //sleep(5);
     char buffer[MAX_BUFFER_SIZE] = {0};
 
     errorCheck(recv(clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
@@ -28,4 +31,9 @@ void serveOneClient(int clientFd)
 
     close(clientFd);
     printf("Connection closed...\n");
+}
+
+void *threadRoutine()
+{
+
 }

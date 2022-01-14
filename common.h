@@ -9,11 +9,13 @@
 #include <netdb.h>
 #include <regex.h>
 #include <time.h>
+#include <pthread.h>
 
+#define POOL_NUM_THREADS 4
 #define PORT 8080
 #define STR_PORT "8080"
 #define MAX_BACKLOG 5
-#define MAX_BUFFER_SIZE 2048
+#define MAX_BUFFER_SIZE 4096
 #define MAX_STRING 256
 #define MAX_REQUEST 16
 
