@@ -32,7 +32,7 @@ int handleRequest(char *clientReqBuf, int clientFd)
     memcpy(req.uri, &clientReqBuf[pmatch[2].rm_so], pmatch[2].rm_eo - pmatch[2].rm_so);
     memcpy(req.httpVer, &clientReqBuf[pmatch[3].rm_so], pmatch[3].rm_eo - pmatch[3].rm_so);
 
-    printf("%s,%s,%s\n", req.method, req.uri, req.httpVer);
+    printf("Regex parsed strings: %s,%s,%s\n", req.method, req.uri, req.httpVer);
     reply(&req);
 
     return 0;
@@ -124,6 +124,7 @@ void sendFullResponse(requestType *r)
     }
 
     errorCheck(send(r->socket, buffer, sizeof(buffer), 0), "Unable to send full response");
+    printf("Reply sent...\n");
 }
 
 void createHeader(headerType *h)
