@@ -6,7 +6,7 @@ int main(int argc, char const *argv[])
 {
     int serverFd, flag;
     
-    if (argc > 2 && strcmp(argv[1], "simple") == 0)
+    if (argc > 1 && strcmp(argv[1], "simple") == 0)
     {
         flag = SIMPLE;
     }
