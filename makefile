@@ -1,5 +1,5 @@
 EXE = server client
-SOBJ = server.o connect.o serverHttp.o util.o
+SOBJ = server.o connect.o serverHttp.o util.o queue.o
 COBJ = client.o connect.o clientHttp.o util.o
 CC = gcc -Wall
 
@@ -28,6 +28,9 @@ clientHttp.o: clientHttp.c common.h
 
 util.o: util.c common.h
 	$(CC) -c util.c
+
+queue.o: queue.c common.h
+	$(CC) -c queue.c
 
 clean:
 	rm -f $(EXE) $(SOBJ) $(COBJ)
