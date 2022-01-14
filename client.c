@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
             sendSimpleRequest("/example.html", serverFd);
             break;
         case FULL:
-            sendFullRequest("/example.html", serverFd);
+            sendFullRequest("/example.html", serverFd, REQUEST[get]);
             break;
         default:
             perror("No request sent");

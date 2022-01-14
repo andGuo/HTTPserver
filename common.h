@@ -56,8 +56,8 @@ void acceptConnect(int serverSok, int *clientSok);
 void connectClient(int *serverSok);
 
 //clientHttp.c
-void sendSimpleRequest(const char* uri, int serverFd);
-void sendFullRequest();
+void sendSimpleRequest(char *uri, int serverFd);
+void sendFullRequest(char *uri, int serverFd, const char *requestStr);
 void handleResponse(int serverFd);
 
 //serverHttp.c
