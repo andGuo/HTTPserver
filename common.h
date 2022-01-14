@@ -53,6 +53,7 @@ typedef struct {
 
 //server.c
 void serveOneClient(int *clientFd);
+void *threadRoutine(void *arg);
 
 //client.c
 void doClientRequest(int serverFd);
