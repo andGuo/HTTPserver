@@ -67,4 +67,4 @@ void createHeader(headerType *h);
 void sendSimpleResponse(requestType *r);
 void sendFullResponse(requestType *r);
 void sendSimpleError(requestType *r, int statusCode, const char *reason);
-void sendFullError(headerType *r, int statusCode, const char *reason);
+void sendFullError(headerType *r, int statusCode, char *reason);

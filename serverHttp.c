@@ -60,7 +60,7 @@ void sendSimpleResponse(requestType *r)
 
     char buffer[MAX_BUFFER_SIZE] = {0};
     //Pretend I look up an HTML file here
-    snprintf(buffer, sizeof(buffer), "%s\r\n", "<html>\r\n<body>\r\n\r\n<h1>My First Heading</h1>\r\n\r\n<p>My first paragraph.</p>\r\n\r\n</body>\r\n</html>\r\n");
+    snprintf(buffer, sizeof(buffer), "%s\r\n", "<html>\r\n<body>\r\n\r\n<h1>My http0.9 response</h1>\r\n\r\n<p>Hello.</p>\r\n\r\n</body>\r\n</html>\r\n");
     send(r->socket, buffer, strlen(buffer), 0);
 }
 
@@ -89,16 +89,24 @@ void sendFullResponse(requestType *r)
         perror("Time greater than maxsize");
     }
 
+    header.rq = r;
     header.strDate = date;
     header.serverName = serverHost;
     header.outBuffer = buffer;
 
     if (strcmp(r->method, REQUEST[get]) == 0)
     {
-        
+        //Pretend I look up a file here
+        header.status = 200;
+        header.reasonPhrase = "ok";
+        header.contentType = "text/html";
+        createHeader(&header);
+        //'Append' file data
+        strncat(buffer, "<html>\r\n<body>\r\n\r\n<h1>My http1.0 response</h1>\r\n\r\n<p>Hello.</p>\r\n\r\n</body>\r\n</html>\r\n", sizeof(buffer)-strlen(buffer)-1);
     }
     else if (strcmp(r->method, REQUEST[head]) == 0)
     {
+        //Pretend I look up an HTML file here
         header.status = 200;
         header.reasonPhrase = "ok";
         header.contentType = "text/html";
@@ -111,6 +119,7 @@ void sendFullResponse(requestType *r)
     else
     {
         sendFullError(&header, 501, "Not Implemented");
+        strncat(buffer, "<title>Error #500 internal error</title>\r\n<h1>Error #500 internal error</h1>\r\n", sizeof(buffer)-strlen(buffer)-1);
     }
 
     errorCheck(send(r->socket, buffer, sizeof(buffer), 0), "Unable to send full response");
@@ -122,9 +131,10 @@ void createHeader(headerType *h)
     h->rq->httpVer, h->status, h->reasonPhrase, h->strDate, h->serverName, h->contentType);
 }
 
-void sendFullError(headerType *h, int statusCode, const char *reason)
+void sendFullError(headerType *h, int statusCode, char *reason)
 {
     h->status = statusCode;
     h->reasonPhrase = reason;
+    h->contentType = "text/html";
     createHeader(h);
 }
