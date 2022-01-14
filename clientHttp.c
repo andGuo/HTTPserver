@@ -4,7 +4,7 @@ void sendSimpleRequest(const char* uri, int serverFd)
 {
     char request[MAX_BUFFER_SIZE];
 
-    snprintf(request, sizeof(request), "%s%s\r\n", "GET ", document);
+    snprintf(request, sizeof(request), "%s%s\r\n", "GET ", uri);
 
     errorCheck(send(serverFd, request, sizeof(request), 0), "Unable to send data"); 
 }
