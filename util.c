@@ -16,10 +16,10 @@ void *getInAddr(struct sockaddr *sa)
 {
     if (sa->sa_family == AF_INET)
     {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
+        return &(((struct sockaddr_in *)sa)->sin_addr);
     }
     //else must be AF_INET6
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
+    return &(((struct sockaddr_in6 *)sa)->sin6_addr);
 }
 
 int genTime(char *dateStr)

@@ -3,7 +3,7 @@
 int main(int argc, char *argv[])
 {
     int serverFd, clientFd;
-    
+
     setUpServer(&serverFd);
 
     while (1)

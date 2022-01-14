@@ -6,16 +6,15 @@ int handleRequest(char *clientReqBuf, int clientFd)
         .method = {0},
         .uri = {0},
         .httpVer = {0},
-        .socket = clientFd
-    };
-    
+        .socket = clientFd};
+
     regex_t regex;
     size_t nmatch = 5;
     regmatch_t pmatch[5];
     char *pattern = "^([A-Z]+)[[:blank:]]+(http?://[[:graph:]]*|/[[:graph:]]*)[[:blank:]]*(HTTP/[0-9][.][0-9])?.*\r?\n";
     char errBuffer[MAX_STRING];
     int rt;
-    
+
     errorCheck(regcomp(&regex, pattern, REG_EXTENDED), "regcomp error");
 
     if ((rt = regexec(&regex, clientReqBuf, nmatch, pmatch, 0)) != 0)
@@ -70,7 +69,7 @@ void sendSimpleError(requestType *r, int statusCode, const char *reason)
 
     snprintf(response, sizeof(response), "%d %s\r\n", statusCode, reason);
 
-    errorCheck(send(r->socket, response, sizeof(response), 0), "Unable to send simple error"); 
+    errorCheck(send(r->socket, response, sizeof(response), 0), "Unable to send simple error");
 }
 
 void sendFullResponse(requestType *r)
@@ -81,11 +80,13 @@ void sendFullResponse(requestType *r)
     char date[MAX_STRING];
     char serverHost[MAX_STRING];
 
-    if (gethostname(serverHost, MAX_STRING) != 0){
+    if (gethostname(serverHost, MAX_STRING) != 0)
+    {
         perror("Unable to get host name");
     }
 
-    if (genTime(date) == 0){
+    if (genTime(date) == 0)
+    {
         perror("Time greater than maxsize");
     }
 
@@ -102,7 +103,7 @@ void sendFullResponse(requestType *r)
         header.contentType = "text/html";
         createHeader(&header);
         //'Append' file data
-        strncat(buffer, "<html>\r\n<body>\r\n\r\n<h1>My http1.0 response</h1>\r\n\r\n<p>Hello.</p>\r\n\r\n</body>\r\n</html>\r\n", sizeof(buffer)-strlen(buffer)-1);
+        strncat(buffer, "<html>\r\n<body>\r\n\r\n<h1>My http1.0 response</h1>\r\n\r\n<p>Hello.</p>\r\n\r\n</body>\r\n</html>\r\n", sizeof(buffer) - strlen(buffer) - 1);
     }
     else if (strcmp(r->method, REQUEST[head]) == 0)
     {
@@ -115,12 +116,12 @@ void sendFullResponse(requestType *r)
     else if (strcmp(r->method, REQUEST[post]) == 0)
     {
         sendFullError(&header, 204, "No content");
-        strncat(buffer, "<html>\r\n<body>\r\n\r\n<h1>Under Construction</h1>\r\n\r\n<p>Thanks for the request but, we don't take POSTs yet :-)</p>\r\n\r\n</body>\r\n</html>\r\n", sizeof(buffer)-strlen(buffer)-1);
+        strncat(buffer, "<html>\r\n<body>\r\n\r\n<h1>Under Construction</h1>\r\n\r\n<p>Thanks for the request but, we don't take POSTs yet :-)</p>\r\n\r\n</body>\r\n</html>\r\n", sizeof(buffer) - strlen(buffer) - 1);
     }
     else
     {
         sendFullError(&header, 501, "Not Implemented");
-        strncat(buffer, "<title>Error #500 internal error</title>\r\n<h1>Error #500 internal error</h1>\r\n", sizeof(buffer)-strlen(buffer)-1);
+        strncat(buffer, "<title>Error #500 internal error</title>\r\n<h1>Error #500 internal error</h1>\r\n", sizeof(buffer) - strlen(buffer) - 1);
     }
 
     errorCheck(send(r->socket, buffer, sizeof(buffer), 0), "Unable to send full response");
@@ -130,7 +131,7 @@ void sendFullResponse(requestType *r)
 void createHeader(headerType *h)
 {
     snprintf(h->outBuffer, MAX_BUFFER_SIZE, "%s %d %s\r\nDate: %s\r\nServer: %s\r\nContent-type: %s\r\n\r\n",
-    h->rq->httpVer, h->status, h->reasonPhrase, h->strDate, h->serverName, h->contentType);
+             h->rq->httpVer, h->status, h->reasonPhrase, h->strDate, h->serverName, h->contentType);
 }
 
 void sendFullError(headerType *h, int statusCode, char *reason)

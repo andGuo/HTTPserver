@@ -5,7 +5,7 @@
 int main(int argc, char const *argv[])
 {
     int serverFd, flag;
-    
+
     if (argc > 1 && strcmp(argv[1], "simple") == 0)
     {
         flag = SIMPLE;
@@ -14,22 +14,22 @@ int main(int argc, char const *argv[])
     {
         flag = FULL;
     }
-    
+
     connectClient(&serverFd);
 
-    switch(flag)
+    switch (flag)
     {
-        case SIMPLE:
-            sendSimpleRequest("/example.html", serverFd);
-            break;
-        case FULL:
-            sendFullRequest("/example.html", serverFd, REQUEST[get]);
-            break;
-        default:
-            perror("No request sent");
-            break;
+    case SIMPLE:
+        sendSimpleRequest("/example.html", serverFd);
+        break;
+    case FULL:
+        sendFullRequest("/example.html", serverFd, REQUEST[get]);
+        break;
+    default:
+        perror("No request sent");
+        break;
     }
-    
+
     handleResponse(serverFd);
 
     close(serverFd);

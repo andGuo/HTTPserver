@@ -1,29 +1,28 @@
 #include "common.h"
 
-void sendSimpleRequest(char* uri, int serverFd)
+void sendSimpleRequest(char *uri, int serverFd)
 {
     char request[MAX_BUFFER_SIZE];
 
     snprintf(request, sizeof(request), "%s %s\r\n", "GET", uri);
 
-    errorCheck(send(serverFd, request, sizeof(request), 0), "Unable to send data"); 
+    errorCheck(send(serverFd, request, sizeof(request), 0), "Unable to send data");
 }
 
-
-void sendFullRequest(char* uri, int serverFd, const char* requestStr)
+void sendFullRequest(char *uri, int serverFd, const char *requestStr)
 {
     char request[MAX_BUFFER_SIZE];
     char userAgent[MAX_STRING];
 
-    if (gethostname(userAgent, MAX_STRING) != 0){
+    if (gethostname(userAgent, MAX_STRING) != 0)
+    {
         perror("Unable to get agent name");
     }
 
     snprintf(request, sizeof(request), "%s %s HTTP/1.0\r\nUser-Agent: %s\r\n", requestStr, uri, userAgent);
 
-    errorCheck(send(serverFd, request, sizeof(request), 0), "Unable to send data"); 
+    errorCheck(send(serverFd, request, sizeof(request), 0), "Unable to send data");
 }
-
 
 void handleResponse(int serverFd)
 {
