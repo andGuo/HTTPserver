@@ -39,6 +39,16 @@ typedef struct {
     char *outBuffer;
 } headerType;
 
+typedef struct {
+  nodeType *head;
+  nodeType *tail;
+} queueType;
+
+typedef struct node{
+    struct node *next;
+    int *clientFd;
+} nodeType;
+
 /* Function forward references */
 
 //server.c
@@ -70,3 +80,10 @@ void sendSimpleResponse(requestType *r);
 void sendFullResponse(requestType *r);
 void sendSimpleError(requestType *r, int statusCode, const char *reason);
 void sendFullError(headerType *r, int statusCode, char *reason);
+
+//queue.c
+void initQueue(queueType *q);
+void addTask(queueType *q, int *clientSocket);
+int pollFirst(queueType *q, int **clientSocket);
+int isEmpty(queueType *q);
+void cleanQueue(queueType *q);

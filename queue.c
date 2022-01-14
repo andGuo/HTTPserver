@@ -1,15 +1,5 @@
 #include <common.h>
 
-typedef struct {
-  nodeType *head;
-  nodeType *tail;
-} queueType;
-
-typedef struct node{
-    struct node *next;
-    int *clientFd;
-} nodeType;
-
 void initQueue(queueType *q)
 {
   q->head = NULL;
@@ -32,7 +22,7 @@ void addTask(queueType *q, int *clientSocket)
     q->head = newNode;
     q->tail = newNode;
   }
-  else 
+  else
   {
     q->tail = newNode;
     currentNode->next = newNode;
@@ -99,4 +89,3 @@ void cleanQueue(queueType *q)
   q->head = NULL;
   q->tail = NULL;
 }
-
