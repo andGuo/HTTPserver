@@ -27,7 +27,7 @@ void addTask(queueType *q, int *clientSocket)
   newNode->next = NULL;
   newNode->clientFd = clientSocket;
 
-  if (isEmpty(q) == 0)
+  if (isEmpty(q) == NULL)
   {
     q->head = newNode;
     q->tail = newNode;
@@ -44,9 +44,9 @@ int pollFirst(queueType *q, int **clientSocket)
   nodeType *currentNode;
   nodeType *nextNode;
 
-  if (isEmpty(q) == 0)
+  if (isEmpty(q) == NULL)
   {
-    return -1;
+    return NULL;
   }
 
   currentNode = q->head;
@@ -66,18 +66,18 @@ int pollFirst(queueType *q, int **clientSocket)
     q->head = nextNode;
   }
 
-  return 0;
+  return 1;
 }
 
 int isEmpty(queueType *q)
 {
   if (q->head == NULL && q->tail == NULL)
   {
-    return 0;
+    return NULL;
   }
   else
   {
-    return -1;
+    return 1;
   }
 }
 
