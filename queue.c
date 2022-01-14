@@ -6,7 +6,7 @@ void initQueue(queueType *q)
   q->tail = NULL;
 }
 
-void addTask(queueType *q, int *clientSocket)
+void queueTask(queueType *q, int *clientSocket)
 {
   nodeType *currentNode;
   nodeType *newNode;
@@ -29,7 +29,7 @@ void addTask(queueType *q, int *clientSocket)
   }
 }
 
-int pollFirst(queueType *q, int **clientSocket)
+int dequeueTask(queueType *q, int **clientSocket)
 {
   nodeType *currentNode;
   nodeType *nextNode;

@@ -83,7 +83,7 @@ void sendFullError(headerType *r, int statusCode, char *reason);
 
 //queue.c
 void initQueue(queueType *q);
-void addTask(queueType *q, int *clientSocket);
-int pollFirst(queueType *q, int **clientSocket);
+void queueTask(queueType *q, int *clientSocket);
+int dequeueTask(queueType *q, int **clientSocket);
 int isEmpty(queueType *q);
 void cleanQueue(queueType *q);
