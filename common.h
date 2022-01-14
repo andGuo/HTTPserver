@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <regex.h>
+#include <time.h>
 
 #define PORT 8080
 #define STR_PORT "8080"
@@ -16,7 +17,7 @@
 #define MAX_STRING 256
 #define MAX_REQUEST 16
 
-typedef enum {get, head, post} RequestEnum;
+typedef enum {get, head, post, error} RequestEnum;
 static const char *REQUEST[] = {"GET", "HEAD", "POST"};
 
 typedef struct {
@@ -26,6 +27,16 @@ typedef struct {
     int socket;
 } requestType;
 
+typedef struct {
+    requestType *rq;
+    int status;
+    char *reasonPhrase;
+    char *strDate;
+    char *serverName;
+    char *contentType;
+    char *outBuffer;
+} headerType;
+
 /* Function forward references */
 
 //server.c
@@ -34,12 +45,15 @@ void serveOneClient(int clientFd);
 //client.c
 void doClientRequest(int serverFd);
 
-//connect.c
+//util.c
 int errorCheck(int rtnVal, const char *message);
+void *getInAddr(struct sockaddr *sa);
+int genTime(char *dateStr);
+
+//connect.c
 void setUpServer(int *serverSok);
 void acceptConnect(int serverSok, int *clientSok);
 void connectClient(int *serverSok);
-void *getInAddr(struct sockaddr *sa);
 
 //clientHttp.c
 void sendSimpleRequest(const char* document, int serverFd);
@@ -49,8 +63,8 @@ void handleResponse(int serverFd);
 //serverHttp.c
 int handleRequest(char *buffer, int clientFd);
 void reply(requestType *r);
-void createHeader(RequestEnum rType, requestType *r, char *buffer);
+void createHeader(headerType *h);
 void sendSimpleResponse(requestType *r);
 void sendFullResponse(requestType *r);
-void sendSimpleError(requestType *r, int statusCode, const char *message);
-void sendFullError(requestType *r, int statusCode, const char *message);
+void sendSimpleError(requestType *r, int statusCode, const char *reason);
+void sendFullError(headerType *r, int statusCode, const char *reason);

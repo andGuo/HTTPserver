@@ -44,7 +44,7 @@ void reply(requestType *r)
     {
         sendSimpleResponse(r); //send a http 0.9 response
     }
-    else //should be an http 1.0 or http 1.1 request.
+    else
     {
         sendFullResponse(r); //send a http 1.0 response
     }
@@ -64,16 +64,45 @@ void sendSimpleResponse(requestType *r)
     send(r->socket, buffer, strlen(buffer), 0);
 }
 
+void sendSimpleError(requestType *r, int statusCode, const char *reason)
+{
+    char response[MAX_BUFFER_SIZE];
+
+    snprintf(response, sizeof(response), "%d %s\r\n", statusCode, reason);
+
+    errorCheck(send(r->socket, response, sizeof(response), 0), "Unable to send simple error"); 
+}
+
 void sendFullResponse(requestType *r)
 {
     char buffer[MAX_BUFFER_SIZE] = {0};
+    headerType header;
+
+    char date[MAX_STRING];
+    char serverHost[MAX_STRING];
+
+    if (gethostname(serverHost, MAX_STRING) != 0){
+        perror("Unable to get host name");
+    }
+
+    if (genTime(date) == 0){
+        perror("Time greater than maxsize");
+    }
+
+    header.strDate = date;
+    header.serverName = serverHost;
+    header.outBuffer = buffer;
+
     if (strcmp(r->method, REQUEST[get]) == 0)
     {
         
     }
     else if (strcmp(r->method, REQUEST[head]) == 0)
     {
-
+        header.status = 200;
+        header.reasonPhrase = "ok";
+        header.contentType = "text/html";
+        createHeader(&header);
     }
     else if (strcmp(r->method, REQUEST[post]) == 0)
     {
@@ -81,29 +110,21 @@ void sendFullResponse(requestType *r)
     }
     else
     {
-        sendFullError(r, 501, "Not Implemented");
+        sendFullError(&header, 501, "Not Implemented");
     }
+
+    errorCheck(send(r->socket, buffer, sizeof(buffer), 0), "Unable to send full response");
 }
 
-void createHeader(RequestEnum rType, requestType *r, char *buffer)
+void createHeader(headerType *h)
 {
-    
+    snprintf(h->outBuffer, MAX_BUFFER_SIZE, "%s %d %s\r\nDate: %s\r\nServer: %s\r\nContent-type: %s\r\n\r\n",
+    h->rq->httpVer, h->status, h->reasonPhrase, h->strDate, h->serverName, h->contentType);
 }
 
-void sendSimpleError(requestType *r, int statusCode, const char *message)
+void sendFullError(headerType *h, int statusCode, const char *reason)
 {
-    char response[MAX_BUFFER_SIZE];
-
-    snprintf(response, sizeof(response), "%d %s\r\n", statusCode, message);
-
-    errorCheck(send(r->socket, response, sizeof(response), 0), "Unable to send simple error"); 
-}
-
-void sendFullError(requestType *r, int statusCode, const char *message)
-{
-    char response[MAX_BUFFER_SIZE];
-
-    snprintf(response, sizeof(response), "%s %d %s\r\n", r->httpVer, statusCode, message);
-
-    errorCheck(send(r->socket, response, sizeof(response), 0), "Unable to send simple error"); 
+    h->status = statusCode;
+    h->reasonPhrase = reason;
+    createHeader(h);
 }

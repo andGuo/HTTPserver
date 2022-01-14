@@ -1,6 +1,6 @@
 EXE = server client
-SOBJ = server.o connect.o serverHttp.o
-COBJ = client.o connect.o clientHttp.o
+SOBJ = server.o connect.o serverHttp.o util.o
+COBJ = client.o connect.o clientHttp.o util.o
 CC = gcc -Wall
 
 all:    $(EXE)
@@ -17,14 +17,17 @@ connect.o: connect.c common.h
 server.o: server.c common.h
 	$(CC) -c server.c
 
-serverHttp.0: serverHttp.c common.server
+serverHttp.o: serverHttp.c common.h
 	$(CC) -c serverHttp.c
 
 client.o: client.c common.h
 	$(CC) -c client.c
 
-clientHttp: clientHttp.c common.clientHttp
+clientHttp.o: clientHttp.c common.h
 	$(CC) -c clientHttp.c
+
+util.o: util.c common.h
+	$(CC) -c util.c
 
 clean:
 	rm -f $(EXE) $(SOBJ) $(COBJ)
