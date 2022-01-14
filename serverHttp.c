@@ -114,7 +114,8 @@ void sendFullResponse(requestType *r)
     }
     else if (strcmp(r->method, REQUEST[post]) == 0)
     {
-
+        sendFullError(&header, 204, "No content");
+        strncat(buffer, "<html>\r\n<body>\r\n\r\n<h1>Under Construction</h1>\r\n\r\n<p>Thanks for the request but, we don't take POSTs yet :-)</p>\r\n\r\n</body>\r\n</html>\r\n", sizeof(buffer)-strlen(buffer)-1);
     }
     else
     {
