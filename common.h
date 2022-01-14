@@ -56,7 +56,7 @@ void acceptConnect(int serverSok, int *clientSok);
 void connectClient(int *serverSok);
 
 //clientHttp.c
-void sendSimpleRequest(const char* document, int serverFd);
+void sendSimpleRequest(const char* uri, int serverFd);
 void sendFullRequest();
 void handleResponse(int serverFd);
 

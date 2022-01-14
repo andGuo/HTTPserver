@@ -1,6 +1,6 @@
 #include "common.h"
 
-void sendSimpleRequest(const char* document, int serverFd)
+void sendSimpleRequest(const char* uri, int serverFd)
 {
     char request[MAX_BUFFER_SIZE];
 
