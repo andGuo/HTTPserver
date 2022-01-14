@@ -6,7 +6,7 @@ void initQueue(queueType *q)
   q->tail = NULL;
 }
 
-void queueTask(queueType *q, int *clientSocket)
+void enqueueTask(queueType *q, int *clientSocket)
 {
   nodeType *currentNode;
   nodeType *newNode;
