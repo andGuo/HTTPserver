@@ -5,14 +5,22 @@ int main(int argc, char *argv[])
     int serverFd, *clientFd;
 
     pthread_t threadPool[POOL_NUM_THREADS];
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     queueType taskQueue;
-    void* taskq = &taskQueue;
+    initQueue(&taskQueue);
+
+    threadArgType arg = {
+        .mutex = &mutex,
+        .taskq = &taskQueue
+    };
+
+    void* argPtr = &arg;
 
     setUpServer(&serverFd);
 
     for (int i = 0; i < POOL_NUM_THREADS; ++i)
     {
-        errorCheck(pthread_create(&threadPool[i], NULL, threadRoutine, taskq), "Thread creation error");
+        errorCheck(pthread_create(&threadPool[i], NULL, threadRoutine, argPtr), "Thread creation error");
     }
 
     while (1)
@@ -29,7 +37,7 @@ int main(int argc, char *argv[])
 
 void serveOneClient(int *clientFd)
 {
-    //sleep(5);
+    sleep(5);
     char buffer[MAX_BUFFER_SIZE] = {0};
 
     errorCheck(recv(*clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
@@ -44,13 +52,17 @@ void serveOneClient(int *clientFd)
 
 void *threadRoutine(void *arg)
 {
-    int *clientFd;
-    queueType *taskQueue = (queueType*) arg;
+    threadArgType *res = (threadArgType*) arg;
+    pthread_mutex_t *mutex = res->mutex;
+    queueType *queue = res->taskq;
+    int *clientFd, rtn;
 
     while(1)
     {
-        //Probably need a mutex on the task queue here
-        if (dequeueTask(taskQueue, &clientFd) == 0)
+        pthread_mutex_lock(mutex);
+        rtn = dequeueTask(queue, &clientFd);
+        pthread_mutex_unlock(mutex);
+        if (rtn == 0)
         {
             serveOneClient(clientFd);
         }

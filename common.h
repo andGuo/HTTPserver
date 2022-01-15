@@ -11,7 +11,7 @@
 #include <time.h>
 #include <pthread.h>
 
-#define POOL_NUM_THREADS 4
+#define POOL_NUM_THREADS 10
 #define PORT 8080
 #define STR_PORT "8080"
 #define MAX_BACKLOG 5
@@ -48,6 +48,11 @@ typedef struct {
   nodeType *head;
   nodeType *tail;
 } queueType;
+
+typedef struct {	// Specs for one fight of one scenario of one run
+  queueType *taskq;
+  pthread_mutex_t *mutex;
+} threadArgType;
 
 /* Function forward references */
 
