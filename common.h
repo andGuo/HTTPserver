@@ -49,7 +49,7 @@ typedef struct {
   nodeType *tail;
 } queueType;
 
-typedef struct {	// Specs for one fight of one scenario of one run
+typedef struct {
   queueType *taskq;
   pthread_mutex_t *mutex;
   pthread_cond_t *conVar;
