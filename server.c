@@ -27,7 +27,9 @@ int main(int argc, char *argv[])
     {
         printf("Waiting for connection...\n");
         acceptConnect(serverFd, &clientFd);
+        pthread_mutex_lock(&mutex);
         enqueueTask(&taskQueue, clientFd);
+        pthread_mutex_unlock(&mutex);
     }
 
     close(serverFd);
@@ -37,7 +39,6 @@ int main(int argc, char *argv[])
 
 void serveOneClient(int *clientFd)
 {
-    sleep(5);
     char buffer[MAX_BUFFER_SIZE] = {0};
 
     errorCheck(recv(*clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");

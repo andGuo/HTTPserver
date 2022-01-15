@@ -11,7 +11,7 @@
 #include <time.h>
 #include <pthread.h>
 
-#define POOL_NUM_THREADS 10
+#define POOL_NUM_THREADS 20
 #define PORT 8080
 #define STR_PORT "8080"
 #define MAX_BACKLOG 5
