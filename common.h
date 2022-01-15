@@ -14,7 +14,7 @@
 #define POOL_NUM_THREADS 20
 #define PORT 8080
 #define STR_PORT "8080"
-#define MAX_BACKLOG 5
+#define MAX_CONNECTION_BACKLOG 1000
 #define MAX_BUFFER_SIZE 4096
 #define MAX_STRING 256
 #define MAX_REQUEST 16
@@ -93,4 +93,5 @@ void sendFullError(headerType *r, int statusCode, char *reason);
 void initQueue(queueType *q);
 void enqueueTask(queueType *q, int *clientSocket);
 int dequeueTask(queueType *q, int **clientSocket);
+int isEmpty(queueType *q);
 void cleanQueue(queueType *q);

@@ -17,7 +17,7 @@ void enqueueTask(queueType *q, int *clientSocket)
   newNode->next = NULL;
   newNode->clientFd = clientSocket;
 
-  if (q->head == NULL && q->tail == NULL)
+  if (isEmpty(q) == 1)
   {
     q->head = newNode;
     q->tail = newNode;
@@ -34,7 +34,7 @@ int dequeueTask(queueType *q, int **clientSocket)
   nodeType *currentNode;
   nodeType *nextNode;
 
-  if (q->head == NULL && q->tail == NULL)
+  if (isEmpty(q) == 1)
   {
     return -1;
   }
@@ -57,6 +57,18 @@ int dequeueTask(queueType *q, int **clientSocket)
   }
 
   return 0;
+}
+
+int isEmpty(queueType *q)
+{
+  if (q->head == NULL && q->tail == NULL)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
 }
 
 void cleanQueue(queueType *q)

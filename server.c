@@ -14,10 +14,9 @@ int main(int argc, char *argv[])
         .mutex = &mutex,
         .taskq = &taskQueue,
         .conVar = &conditionVar,
-        .keepRunning = 1
-    };
+        .keepRunning = 1};
 
-    void* argPtr = &arg;
+    void *argPtr = &arg;
 
     setUpServer(&serverFd);
 
@@ -34,6 +33,11 @@ int main(int argc, char *argv[])
         enqueueTask(&taskQueue, clientFd);
         pthread_mutex_unlock(&mutex);
         pthread_cond_signal(&conditionVar);
+    }
+
+    while (isEmpty(&taskQueue) == 0) //Wait for task queue to empty
+    {
+        usleep(500000);
     }
 
     //Clean up runtime
@@ -55,6 +59,7 @@ int main(int argc, char *argv[])
 
 void serveOneClient(int *clientFd)
 {
+    sleep(5); //Simulate heavy task
     char buffer[MAX_BUFFER_SIZE] = {0};
 
     errorCheck(recv(*clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
@@ -69,12 +74,12 @@ void serveOneClient(int *clientFd)
 void *threadRoutine(void *arg)
 {
     int *clientFd, rtn;
-    threadArgType *res = (threadArgType*) arg;
+    threadArgType *res = (threadArgType *)arg;
     pthread_mutex_t *mutex = res->mutex;
     queueType *queue = res->taskq;
     pthread_cond_t *conditionVar = res->conVar;
 
-    while(res->keepRunning)
+    while (res->keepRunning)
     {
         pthread_mutex_lock(mutex);
         rtn = dequeueTask(queue, &clientFd);
@@ -83,11 +88,12 @@ void *threadRoutine(void *arg)
             pthread_cond_wait(conditionVar, mutex);
             rtn = dequeueTask(queue, &clientFd);
         }
-        
+
         pthread_mutex_unlock(mutex);
         if (rtn == 0)
         {
             serveOneClient(clientFd);
         }
     }
+    return (0);
 }

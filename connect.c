@@ -27,7 +27,7 @@ void setUpServer(int *serverSok)
 
     freeaddrinfo(res);
 
-    errorCheck(listen(*serverSok, MAX_BACKLOG), "Unable to listen on socket");
+    errorCheck(listen(*serverSok, MAX_CONNECTION_BACKLOG), "Unable to listen on socket");
     printf("Done server setup\n");
 }
 
