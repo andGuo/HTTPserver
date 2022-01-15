@@ -35,7 +35,8 @@ int main(int argc, char *argv[])
         pthread_mutex_unlock(&mutex);
         pthread_cond_signal(&conditionVar);
     }
-    
+
+    //Clean up runtime
     arg.keepRunning = 0;
     pthread_cond_broadcast(&conditionVar);
 
@@ -57,7 +58,6 @@ void serveOneClient(int *clientFd)
     char buffer[MAX_BUFFER_SIZE] = {0};
 
     errorCheck(recv(*clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
-    //printf("%s", buffer);
     handleRequest(buffer, clientFd);
 
     close(*clientFd);
@@ -83,6 +83,7 @@ void *threadRoutine(void *arg)
             pthread_cond_wait(conditionVar, mutex);
             rtn = dequeueTask(queue, &clientFd);
         }
+        
         pthread_mutex_unlock(mutex);
         if (rtn == 0)
         {
