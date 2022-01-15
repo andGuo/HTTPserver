@@ -85,11 +85,11 @@ void *threadRoutine(void *arg)
         rtn = dequeueTask(queue, &clientFd);
         if (rtn != 0)
         {
-            pthread_cond_wait(conditionVar, mutex);
+            pthread_cond_wait(conditionVar, mutex); //unlocks, waits, and locks
             rtn = dequeueTask(queue, &clientFd);
         }
 
-        pthread_mutex_unlock(mutex);
+        pthread_mutex_unlock(mutex); //unlocked regardless of whether thread waited or not
         if (rtn == 0)
         {
             serveOneClient(clientFd);
