@@ -2,7 +2,7 @@
 
 void sendSimpleRequest(char *uri, int serverFd)
 {
-    char request[MAX_BUFFER_SIZE];
+    char request[MAX_BUFFER_SIZE] = {0};
 
     snprintf(request, sizeof(request), "%s %s\r\n", "GET", uri);
 
@@ -11,8 +11,8 @@ void sendSimpleRequest(char *uri, int serverFd)
 
 void sendFullRequest(char *uri, int serverFd, const char *requestStr)
 {
-    char request[MAX_BUFFER_SIZE];
-    char userAgent[MAX_STRING];
+    char request[MAX_BUFFER_SIZE] = {0};
+    char userAgent[MAX_STRING] = {0};
 
     if (gethostname(userAgent, MAX_STRING) != 0)
     {
