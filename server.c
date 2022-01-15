@@ -6,12 +6,14 @@ int main(int argc, char *argv[])
 
     pthread_t threadPool[POOL_NUM_THREADS];
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t conditionVar = PTHREAD_COND_INITIALIZER;
     queueType taskQueue;
     initQueue(&taskQueue);
 
     threadArgType arg = {
         .mutex = &mutex,
-        .taskq = &taskQueue
+        .taskq = &taskQueue,
+        .conVar = &conditionVar
     };
 
     void* argPtr = &arg;
@@ -22,14 +24,15 @@ int main(int argc, char *argv[])
     {
         errorCheck(pthread_create(&threadPool[i], NULL, threadRoutine, argPtr), "Thread creation error");
     }
-
+    int i = 0;
     while (1)
     {
-        printf("Waiting for connection...\n");
+        printf("Waiting for connection %d...\n", i++ + 1);
         acceptConnect(serverFd, &clientFd);
         pthread_mutex_lock(&mutex);
         enqueueTask(&taskQueue, clientFd);
         pthread_mutex_unlock(&mutex);
+        pthread_cond_signal(&conditionVar);
     }
 
     close(serverFd);
@@ -42,7 +45,7 @@ void serveOneClient(int *clientFd)
     char buffer[MAX_BUFFER_SIZE] = {0};
 
     errorCheck(recv(*clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
-    printf("%s", buffer);
+    //printf("%s", buffer);
     handleRequest(buffer, clientFd);
 
     close(*clientFd);
@@ -56,16 +59,19 @@ void *threadRoutine(void *arg)
     threadArgType *res = (threadArgType*) arg;
     pthread_mutex_t *mutex = res->mutex;
     queueType *queue = res->taskq;
+    pthread_cond_t *conditionVar = res->conVar;
     int *clientFd, rtn;
 
     while(1)
     {
         pthread_mutex_lock(mutex);
         rtn = dequeueTask(queue, &clientFd);
-        pthread_mutex_unlock(mutex);
-        if (rtn == 0)
+        if (rtn != 0)
         {
-            serveOneClient(clientFd);
+            pthread_cond_wait(conditionVar, mutex);
+            dequeueTask(queue, &clientFd);
         }
+        pthread_mutex_unlock(mutex);
+        serveOneClient(clientFd);
     }
 }

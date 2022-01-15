@@ -52,6 +52,7 @@ typedef struct {
 typedef struct {	// Specs for one fight of one scenario of one run
   queueType *taskq;
   pthread_mutex_t *mutex;
+  pthread_cond_t *conVar;
 } threadArgType;
 
 /* Function forward references */
