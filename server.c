@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
 void serveOneClient(int *clientFd)
 {
-    sleep(5); //Simulate heavy task
+    sleep(2); //Simulate heavy task
     char buffer[MAX_BUFFER_SIZE] = {0};
 
     errorCheck(recv(*clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
@@ -79,12 +79,16 @@ void *threadRoutine(void *arg)
     queueType *queue = res->taskq;
     pthread_cond_t *conditionVar = res->conVar;
 
-    while (res->keepRunning)
+    while (res->keepRunning != 0)
     {
         pthread_mutex_lock(mutex);
         rtn = dequeueTask(queue, &clientFd);
-        if (rtn != 0)
+        while (rtn != 0)
         {
+            if (res->keepRunning == 0)
+            {
+                break;
+            }
             pthread_cond_wait(conditionVar, mutex); //unlocks, waits, and locks
             rtn = dequeueTask(queue, &clientFd);
         }
