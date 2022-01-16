@@ -12,7 +12,7 @@
 #include <pthread.h>
 
 //Feel free to change these
-#define POOL_NUM_THREADS 20
+#define POOL_NUM_THREADS 100
 #define MAX_CONNECTIONS_DONE 1000
 
 //Don't mess with these
