@@ -1,3 +1,10 @@
+#ifndef COMMON_H
+#define COMMON_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -99,3 +106,9 @@ void enqueueTask(queueType *q, int *clientSocket);
 int dequeueTask(queueType *q, int **clientSocket);
 int isEmpty(queueType *q);
 void cleanQueue(queueType *q);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // COMMON_H
