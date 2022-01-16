@@ -24,10 +24,11 @@ int main(int argc, char *argv[])
     {
         errorCheck(pthread_create(&threadPool[i], NULL, threadRoutine, argPtr), "Thread creation error");
     }
+    
     int i = 0;
-    while (i < 100)
+    while (i < MAX_CONNECTIONS_DONE)
     {
-        printf("Waiting for connection %d...\n", i++ + 1);
+        printf("Waiting for connection %d...\n", ++i);
         acceptConnect(serverFd, &clientFd);
         pthread_mutex_lock(&mutex);
         enqueueTask(&taskQueue, clientFd);
