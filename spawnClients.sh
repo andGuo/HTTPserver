@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in {1..1000}
+for ((i = 0; i < $1; i++))
 do
   ./client &
 done
