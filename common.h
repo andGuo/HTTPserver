@@ -18,11 +18,8 @@ extern "C" {
 #include <time.h>
 #include <pthread.h>
 
-//Feel free to change these
-#define POOL_NUM_THREADS 100
-#define MAX_CONNECTIONS_DONE 1000
-
-//Don't mess with these
+#define DEFAULT_NUM_THREADS 10
+#define DEFAULT_CONNECTIONS_DONE 100
 #define PORT 8080
 #define STR_PORT "8080"
 #define MAX_CONNECTION_BACKLOG 1000

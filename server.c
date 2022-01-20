@@ -4,7 +4,22 @@ int main(int argc, char *argv[])
 {
     int serverFd, *clientFd;
 
-    pthread_t threadPool[POOL_NUM_THREADS];
+    int numThreads = DEFAULT_NUM_THREADS;
+    int numResponses = DEFAULT_CONNECTIONS_DONE;
+
+    if (argc > 2)
+    {
+        numThreads = atoi(argv[1]);
+        numResponses = atoi(argv[2]);
+    }
+    else if (argc > 1)
+    {
+        numThreads = atoi(argv[1]);
+    }
+
+    printf("\nStarting server with %d threads and shutdown after responding to %d requests\n\n", numThreads, numResponses);
+
+    pthread_t threadPool[numThreads];
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_cond_t conditionVar = PTHREAD_COND_INITIALIZER;
     queueType taskQueue;
@@ -20,13 +35,13 @@ int main(int argc, char *argv[])
 
     setUpServer(&serverFd);
 
-    for (int i = 0; i < POOL_NUM_THREADS; ++i)
+    for (int i = 0; i < numThreads; ++i)
     {
         errorCheck(pthread_create(&threadPool[i], NULL, threadRoutine, argPtr), "Thread creation error");
     }
     
     int i = 0;
-    while (i < MAX_CONNECTIONS_DONE)
+    while (i < numResponses)
     {
         printf("Waiting for connection %d...\n", ++i);
         acceptConnect(serverFd, &clientFd);
@@ -45,7 +60,7 @@ int main(int argc, char *argv[])
     arg.keepRunning = 0;
     pthread_cond_broadcast(&conditionVar);
 
-    for (int i = 0; i < POOL_NUM_THREADS; ++i)
+    for (int i = 0; i < numThreads; ++i)
     {
         errorCheck(pthread_join(threadPool[i], NULL), "Thread join error");
     }
