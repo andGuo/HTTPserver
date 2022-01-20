@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
 void serveOneClient(int *clientFd)
 {
-    sleep(2); //Simulate heavy task
+    sleep(1); //artificial delay
     char buffer[MAX_BUFFER_SIZE] = {0};
 
     errorCheck(recv(*clientFd, buffer, MAX_BUFFER_SIZE, 0), "Unable to receive data");
