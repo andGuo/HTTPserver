@@ -6,7 +6,11 @@ An interest project of mine
 
 A HTTP 0.9 and HTTP 1.0 compliant web server featuring multi-threading with a thread pool. Includes a barebones client to connect to the server.
 
-Each request takes the server about one second to process. Thus, the formula for how long the server will take to run (assuming the max number of requests is received all at once) is about:
+The main thread listens for client connections and will add them to a task queue. With condition variables, each thread then takes a client connection from the queue, receives the client's HTTP request, parses the necessary info, and responds accordingly. 
+
+The HTTP request is parsed using POSIX regex. The server will send back an HTTP error code and reason phrase if an invalid request is received. Since there is no filesystem, a normal server GET response will include a generated header and static HTML ¯\\\_(ツ)_/¯. 
+
+There is an articifial delay on the thread routine to emaphsize the concurrency of the threads. Feel free to remove it in the source code. Nonetheless, each request takes the server about one second to process. Thus, the formula for how long the server will take to run (assuming the max number of requests is received all at once) is about:
 
 #requests/#threads = #seconds to finish running server
 
