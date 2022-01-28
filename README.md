@@ -21,6 +21,7 @@ Each request takes the server about one second to process. Thus, the formula for
 
 ```
 git clone https://github.com/andGuo/myHttpServer.git
+cd myHttpServer
 make
 ./server
 ```
