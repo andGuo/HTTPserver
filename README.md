@@ -29,8 +29,7 @@ You may choose to pass two command-line arguments to the server process, the fir
 ```
 ./server 100 1000
 ```
-There are a number of ways to connect to the server.
-In a seperate terminal type a combination of any of the following.
+There are a number of ways to connect to a running server. In a seperate terminal type a combination of any of the following:
 ```
 ./client
 
